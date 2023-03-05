@@ -1,0 +1,163 @@
+{
+    "openapi": "3.0.3",
+    "options": {
+      "info": {
+        "title": "Movies API 3.0",
+        "description": "Movies API",
+        "contact": {
+          "email": "develope@blog.com"
+        },
+        "version": "1.0.11"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000"
+      }
+    ],
+    "paths": {
+      "/movies": {
+        "get": {
+          "summary": "find all movies",
+          "tags": [
+            "movies"
+          ],
+          "parameters": [
+            {
+              "name": "access_token",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful find movies",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/movies"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "create movies",
+          "tags": [
+            "movies"
+          ],
+          "parameters": [
+            {
+              "name": "access_token",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "description": "Create new movie",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/movies"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Succesfull create movie",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Success"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/movies/{moviesId}": {
+        "get": {
+          "summary": "find by id",
+          "tags": [
+            "movies"
+          ],
+          "parameters": [
+            {
+              "name": "moviesId",
+              "in": "path",
+              "schema": {
+                "type": "integer"
+              },
+              "required": true
+            },
+            {
+              "name": "access_token",
+              "in": "header",
+              "schema": {
+                "type": "string"
+              },
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Succesful find movies by id",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/movies"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "movies": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "title": {
+              "type": "string",
+              "example": "warkop dki"
+            },
+            "genres": {
+              "type": "string",
+              "example": "comedy"
+            },
+            "year": {
+              "type": "integer",
+              "example": 2015
+            }
+          }
+        },
+        "Success": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "successful"
+            }
+          }
+        }
+      }
+    }
+  }
