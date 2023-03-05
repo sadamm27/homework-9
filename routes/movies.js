@@ -1,16 +1,22 @@
 const express = require("express")
 const router = express.Router();
 const pool = require("../config.js");
-
-
+const {authorization} = require("../middlewares/auth.js");
+const DEFAULT_LIMIT = 10;
+const DEFAULT_PAGE = 1;
 router.get("/movies", (req, res, next) => {
+    const {limit, page} = req.query;
+
+    let resultLimit = limit ? +limit : DEFAULT_LIMIT;
+    let resultPage = page ? +page : DEFAULT_PAGE;
 
     const findQuery = `
         SELECT 
         * 
         FROM MOVIES
-        ORDER BY movies.id;
-    `
+        ORDER BY movies.id
+        LIMIT ${resultLimit} OFFSET ${(resultPage - 1) *resultLimit}
+        `
     pool.query(findQuery, (err, result) => {
         if(err) next(err)
 
@@ -75,7 +81,7 @@ router.get("/users/:id", (req, res, next) => {
         })
 })
 
-router.post("/users", (req, res, next) => {
+router.post("/users", authorization, (req, res, next) => {
     const {email, gender, password, role} = req.body;
 
     const createUsers =`
@@ -85,7 +91,7 @@ router.post("/users", (req, res, next) => {
         RETURNING*;
     `
 
-pool.query(createUsers, [email, gender, password, role], (err, result) => {
+pool.query(createUsers, authorization, [email, gender, password, role], (err, result) => {
         if(err) next(err)
         const data = result.rows[0]
 
